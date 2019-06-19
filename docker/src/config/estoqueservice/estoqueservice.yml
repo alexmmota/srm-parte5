@@ -23,7 +23,7 @@ flyway:
   sql-migration-prefix: 'V'
   sql-migration-separator: '_'
   sql-migration-suffix: '.sql'
-  url: 'jdbc:mysql://database:3306/db_srm_estoque?characterEncoding=utf8'
+  url: 'jdbc:mysql://database:3306/db_srm?characterEncoding=utf8'
   consumer: 'srm'
-  password: '1234'
+  password: '{cipher}134a95195b7c790953589eb1931e5738922dff593506d028a42d3824486889f5'
 
