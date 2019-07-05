@@ -3,6 +3,7 @@ package br.com.srm.service;
 import br.com.srm.exception.BusinessServiceException;
 import br.com.srm.model.ProductEntity;
 import br.com.srm.repository.ProductRepository;
+import br.com.srm.utils.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,6 +54,7 @@ public class ProductService {
     }
 
     public ProductEntity findByISBN(String isbn) {
+        log.info("m=findByISBN, idbn={}", isbn);
         Optional<ProductEntity> product = productRepository.findById(isbn);
         if (product.isPresent())
             return product.get();

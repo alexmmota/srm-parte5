@@ -6,6 +6,8 @@ import br.com.srm.model.Order;
 import br.com.srm.model.OrderItem;
 import br.com.srm.client.dto.Product;
 import br.com.srm.repository.OrderRepository;
+import br.com.srm.utils.UserContext;
+import br.com.srm.utils.UserContextHolder;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
@@ -28,7 +30,8 @@ public class OrderService {
 
     @HystrixCommand
     public Order create(Order order) {
-        logger.info("m=create, order={}", order);
+        logger.info("m=create, order={}, correlationId={}", order, UserContextHolder.getContext().getCorrelationId());
+        validateItensExists(order);
         order.setCreateDate(new Date());
         order.setStatus(Order.Status.CREATED);
         return orderRepository.save(order);
@@ -104,6 +107,14 @@ public class OrderService {
     @HystrixCommand
     private void subtractProductAmount(OrderItem item) {
         estoqueClient.subtractAmount(1l, item.getProduct(), item.getAmount());
+    }
+
+    private void validateItensExists(Order order) {
+        for (OrderItem item : order.getItens()) {
+            Product product = estoqueClient.findByIsbn(1l, item.getProduct());
+            if (product == null)
+                throw new BusinessServiceException("Produto nao encontrado");
+        }
     }
 
     private Order getOrderById(String id) {

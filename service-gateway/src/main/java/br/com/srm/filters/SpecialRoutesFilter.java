@@ -42,7 +42,7 @@ import java.util.Random;
 @Component
 public class SpecialRoutesFilter extends ZuulFilter {
     private static final int FILTER_ORDER =  1;
-    private static final boolean SHOULD_FILTER =true;
+    private static final boolean SHOULD_FILTER = true;
 
     private static Logger logger = LoggerFactory.getLogger(SpecialRoutesFilter.class);
 
@@ -74,6 +74,9 @@ public class SpecialRoutesFilter extends ZuulFilter {
         logger.info("m=run, abTestRoute={}", abTestRoute);
         if (abTestRoute != null && useSpecialRoute(abTestRoute)) {
             ctx.set("serviceId", "new-estoqueservice");
+//            String route = buildRouteString(ctx.getRequest().getRequestURI(),
+//                    abTestRoute.getEndpoint(), ctx.get("serviceId").toString());
+//            forwardToSpecialRoute(route);
         }
         return null;
     }

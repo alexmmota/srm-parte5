@@ -3,6 +3,7 @@ package br.com.srm.service;
 import br.com.srm.exception.BusinessServiceException;
 import br.com.srm.model.ProductEntity;
 import br.com.srm.repository.ProductRepository;
+import br.com.srm.utils.UserContextHolder;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
@@ -58,6 +59,7 @@ public class ProductService {
 
     @HystrixCommand(fallbackMethod = "buildFallbackProductList")
     public ProductEntity findByISBN(String isbn) {
+        log.info("m=findByISBN, idbn={}, correlationId={}", isbn, UserContextHolder.getContext().getCorrelationId());
         Optional<ProductEntity> product = productRepository.findById(isbn);
         if (product.isPresent())
             return product.get();
